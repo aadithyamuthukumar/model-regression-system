@@ -11,6 +11,12 @@ class FewShotExample(BaseModel):
     email: str
     expected_output: ClassificationOutput
 
+class GoldenExample(BaseModel):
+    id: str
+    email: str
+    expected_category: Literal["billing", "technical", "account", "general"]
+    expected_summary: str
+
 @dataclass
 class PromptConfig:
     version: str
