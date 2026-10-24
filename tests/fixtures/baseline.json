@@ -1,0 +1,16 @@
+{
+  "prompt_version": "v1",
+  "accuracy": 1.0,
+  "results": [
+    {
+      "id": "001",
+      "expected_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "002",
+      "expected_category": "technical",
+      "correct": true
+    }
+  ]
+}
