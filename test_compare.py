@@ -1,6 +1,8 @@
+import sys
 import unittest
 import tempfile
 import json
+import subprocess
 from pathlib import Path
 from compare import compare_results
 
@@ -177,6 +179,99 @@ class TestCompareResults(unittest.TestCase):
                 compare_results(baseline_path, [candidate_path])
 
             self.assertIn("Expected category mismatch for ID 001", str(context.exception))
+
+    def test_cli_fails_on_regression(self):
+        baseline = {
+            "prompt_version": "v1",
+            "accuracy": 1.0,
+            "results": [
+                {"id": "001", "expected_category": "billing", "correct": True}
+            ]
+        }
+
+        candidate = {
+            "prompt_version": "v2",
+            "accuracy": 0.0,
+            "results": [
+                {"id": "001", "expected_category": "billing", "correct": False}
+            ]
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            baseline_path = self.write_report(directory, "baseline.json", baseline)
+            candidate_path = self.write_report(directory, "candidate.json", candidate)
+
+            result = subprocess.run(
+                [sys.executable, str(Path(__file__).resolve().parent / "compare.py"),
+                baseline_path, candidate_path],
+                capture_output=True,
+                text=True
+            )
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("FAIL: Regressions detected", result.stdout)
+
+    def test_cli_passes_without_regression(self):
+        baseline = {
+            "prompt_version": "v1",
+            "accuracy": 1.0,
+            "results": [
+                {"id": "001", "expected_category": "billing", "correct": True}
+            ]
+        }
+
+        candidate = {
+            "prompt_version": "v2",
+            "accuracy": 1.0,
+            "results": [
+                {"id": "001", "expected_category": "billing", "correct": True}
+            ]
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            baseline_path = self.write_report(directory, "baseline.json", baseline)
+            candidate_path = self.write_report(directory, "candidate.json", candidate)
+
+            result = subprocess.run(
+                [sys.executable, str(Path(__file__).resolve().parent / "compare.py"),
+                baseline_path, candidate_path],
+                capture_output=True,
+                text=True
+            )
+
+            self.assertEqual(result.returncode, 0)
+            self.assertIn("PASS: No regressions detected", result.stdout)
+
+    def test_cli_fails_if_any_candidate_regresses(self):
+        baseline = {
+            "prompt_version": "v1",
+            "accuracy": 1.0,
+            "results": [
+                {"id": "001", "expected_category": "billing", "correct": True}
+            ]
+        }
+
+        candidate = {
+            "prompt_version": "v2",
+            "accuracy": 0.0,
+            "results": [
+                {"id": "001", "expected_category": "billing", "correct": False}
+            ]
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            baseline_path = self.write_report(directory, "baseline.json", baseline)
+            candidate_path = self.write_report(directory, "candidate.json", candidate)
+
+            result = subprocess.run(
+                [sys.executable, str(Path(__file__).resolve().parent / "compare.py"),
+                baseline_path, candidate_path],
+                capture_output=True,
+                text=True
+            )
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("FAIL: Regressions detected", result.stdout)
 
 if __name__ == "__main__":
     unittest.main()

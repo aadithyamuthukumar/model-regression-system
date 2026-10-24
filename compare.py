@@ -1,6 +1,7 @@
 import json
 import os
 import argparse
+import sys
 
 
 def load_results(file_path: str) -> dict:
@@ -90,6 +91,7 @@ if __name__ == "__main__":
 
     comparisons = compare_results(args.baseline, args.candidates)
 
+    has_regressions = False
     
     print(json.dumps(comparisons, indent=2))
 
@@ -109,5 +111,19 @@ if __name__ == "__main__":
         print(f"Regressions: {len(result['regressions'])}")
         print(f"Improvements: {len(result['improvements'])}")
 
+        
+        if result['regressions']:
+            has_regressions = True
+
         for regression in result["regressions"]:
             print(f"Regressed example: {regression['id']}")
+
+
+    if has_regressions:
+        print("\nFAIL: Regressions detected")
+        sys.exit(1)
+    else:
+        print("\nPASS: No regressions detected")
+        sys.exit(0)
+
+    
