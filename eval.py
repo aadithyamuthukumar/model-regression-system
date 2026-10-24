@@ -14,13 +14,13 @@ def load_dataset(file_path: str) -> list[GoldenExample]:
             examples.append(GoldenExample.model_validate(data))
     return examples
 
-def evaluate(examples: list[GoldenExample]) -> tuple[float, list[dict]]:
-    results = []
-    config = load_prompt("prompts/v1.yaml")
-    count = 0
-
+def evaluate(examples: list[GoldenExample], prompt_version: str) -> tuple[float, list[dict]]:
     if not examples:
-        raise ValueError("No examples to evaluate")
+            raise ValueError("No examples to evaluate") 
+    
+    results = []
+    config = load_prompt(f"prompts/{prompt_version}.yaml")
+    count = 0
 
     for i, example in enumerate(examples, start=1):
         prediction = classify_email(example.email, config)
@@ -41,7 +41,7 @@ def save_results(accuracy: float, results: list[dict], prompt_version: str) -> N
 
     os.makedirs("results", exist_ok=True)
 
-    file_path = f"results/results_{prompt_version}.jsonl"
+    file_path = f"results/results_{prompt_version}.json"
 
     report = {
         "prompt_version": prompt_version,
@@ -64,11 +64,13 @@ if __name__ == "__main__":
     print(examples[0].email)
     print(examples[0].expected_category)
 
-    accuracy, results = evaluate(examples)
+    prompt_version = "v1"
+    
+    accuracy, results = evaluate(examples, prompt_version)
     print(f"Accuracy: {accuracy:.2%}")
     for result in results:
         print(result)
-    save_results(accuracy, results, "v1")
+    save_results(accuracy, results, prompt_version)
 
 
 
