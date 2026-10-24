@@ -86,6 +86,12 @@ if __name__ == "__main__":
         help="Paths to the candidate evaluation reports"
     )
 
+    parser.add_argument(
+        "--fail-on-regression",
+        action="store_true",
+        help="Exit with code 1 if regressions are detected",
+    )
+
     args = parser.parse_args()
 
 
@@ -125,5 +131,11 @@ if __name__ == "__main__":
     else:
         print("\nPASS: No regressions detected")
         sys.exit(0)
+
+    if args.fail_on_regression and regression_count > 0:
+        print(f"FAIL: {regression_count} regressions detected")
+    sys.exit(1)
+
+    print("PASS: No regressions detected")
 
     
