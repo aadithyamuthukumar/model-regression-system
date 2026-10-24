@@ -1,0 +1,45 @@
+name: Model Regression CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: python -m pytest -q
+
+      - name: Verify passing candidate
+        run: |
+          python compare.py \
+            test_reports/baseline.json \
+            test_reports/candidate_pass.json \
+            --fail-on-regression
+
+      - name: Verify failing candidate
+        run: |
+          if python compare.py \
+            test_reports/baseline.json \
+            test_reports/candidate_fail.json \
+            --fail-on-regression; then
+            echo "ERROR: Regression gate failed to reject bad candidate"
+            exit 1
+          else
+            echo "PASS: Regression gate correctly rejected bad candidate"
+          fi
