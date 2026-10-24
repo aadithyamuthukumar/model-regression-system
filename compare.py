@@ -1,5 +1,7 @@
 import json
 import os
+import argparse
+
 
 def load_results(file_path: str) -> dict:
     with open(file_path, "r") as f:
@@ -54,6 +56,8 @@ def compare_results(baseline: str, candidates: list[str]) -> dict:
                     "candidate": candidate_item
                 })
 
+        
+
         comparisons[candidate_report["prompt_version"]] = {
             "baseline_accuracy": baseline_report["accuracy"],
             "candidate_accuracy": candidate_report["accuracy"],
@@ -63,3 +67,47 @@ def compare_results(baseline: str, candidates: list[str]) -> dict:
         }
 
     return comparisons
+
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser(
+        description="Compare LLM evaluation results across prompt versions."
+    )
+
+    parser.add_argument(
+        "baseline",
+        help="Path to the baseline results JSON file"
+    )
+
+    parser.add_argument(
+        "candidates",
+        nargs="+",
+        help="Paths to the candidate evaluation reports"
+    )
+
+    args = parser.parse_args()
+
+
+    comparisons = compare_results(args.baseline, args.candidates)
+
+    
+    print(json.dumps(comparisons, indent=2))
+
+    print("\nModel Regression Report")
+    print("-----------------------")
+
+    for version, result in comparisons.items():
+        print(f"\nCandidate: {version}")
+
+        print(f"Baseline Accuracy: {result['baseline_accuracy']:.2%}")
+        print(f"Candidate Accuracy: {result['candidate_accuracy']:.2%}")
+        print(
+            f"Accuracy Change: "
+            f"{result['accuracy_delta'] * 100:+.2f} percentage points"
+        )
+
+        print(f"Regressions: {len(result['regressions'])}")
+        print(f"Improvements: {len(result['improvements'])}")
+
+        for regression in result["regressions"]:
+            print(f"Regressed example: {regression['id']}")
