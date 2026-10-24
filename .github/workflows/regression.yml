@@ -1,10 +1,18 @@
 name: Model Regression CI
 
+# Fixture-based checks only: these steps validate the regression gate itself
+# against small committed reports in tests/fixtures/. No OpenAI API calls are
+# made. A live LLM evaluation gate (running eval.py and comparing against
+# baselines/approved_v1.jsonl) is not part of this workflow yet.
+
 on:
   pull_request:
     branches: [main]
   push:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -18,28 +26,52 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
       - name: Run unit tests
         run: python -m pytest -q
 
-      - name: Verify passing candidate
+      # compare.py exit codes: 0 = OK, 1 = regression with --fail-on-regression,
+      # 2 = invalid input or error. Each check asserts the exact code expected.
+
+      - name: Verify passing candidate is accepted
         run: |
           python compare.py \
-            test_reports/baseline.json \
-            test_reports/candidate_pass.json \
+            tests/fixtures/baseline.json \
+            tests/fixtures/candidate_pass.json \
             --fail-on-regression
 
-      - name: Verify failing candidate
+      - name: Verify failing candidate is rejected as a regression
         run: |
-          if python compare.py \
-            test_reports/baseline.json \
-            test_reports/candidate_fail.json \
-            --fail-on-regression; then
-            echo "ERROR: Regression gate failed to reject bad candidate"
+          status=0
+          output=$(python compare.py \
+            tests/fixtures/baseline.json \
+            tests/fixtures/candidate_fail.json \
+            --fail-on-regression 2>&1) || status=$?
+          echo "$output"
+          if [ "$status" -ne 1 ]; then
+            echo "::error::Expected exit code 1 (regression), got $status"
             exit 1
-          else
-            echo "PASS: Regression gate correctly rejected bad candidate"
           fi
+          if ! grep -q "Regressed example: 002" <<< "$output"; then
+            echo "::error::Expected regression on example 002 was not reported"
+            exit 1
+          fi
+          echo "PASS: Regression gate rejected bad candidate because of a regression"
+
+      - name: Verify invalid input is an error, not a regression
+        run: |
+          check_error() {
+            status=0
+            python compare.py "$@" --fail-on-regression || status=$?
+            if [ "$status" -ne 2 ]; then
+              echo "::error::Expected exit code 2 (invalid input) for: $*, got $status"
+              exit 1
+            fi
+          }
+          check_error tests/fixtures/baseline.json tests/fixtures/does_not_exist.json
+          check_error tests/fixtures/baseline.json tests/fixtures/candidate_mismatched_ids.json
+          echo "PASS: Invalid inputs are reported as errors (exit 2)"
