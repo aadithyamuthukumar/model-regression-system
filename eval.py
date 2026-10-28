@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 
@@ -57,15 +58,23 @@ def save_results(accuracy: float, results: list[dict], prompt_version: str) -> N
 
 
 
-if __name__ == "__main__":
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description="Evaluate an email classification prompt.")
+    parser.add_argument(
+        "--prompt-version",
+        default="v1",
+        help="Prompt version to evaluate (default: v1)",
+    )
+    args = parser.parse_args(argv)
+
     examples = load_dataset("datasets/golden.jsonl")
 
     print(f"Loaded {len(examples)} examples")
     print(examples[0].email)
     print(examples[0].expected_category)
 
-    prompt_version = "v2"
-    
+    prompt_version = args.prompt_version
+
     accuracy, results = evaluate(examples, prompt_version)
     print(f"Accuracy: {accuracy:.2%}")
     for result in results:
@@ -73,6 +82,5 @@ if __name__ == "__main__":
     save_results(accuracy, results, prompt_version)
 
 
-
-    
-    
+if __name__ == "__main__":
+    main()
