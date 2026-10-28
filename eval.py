@@ -64,7 +64,7 @@ if __name__ == "__main__":
     print(examples[0].email)
     print(examples[0].expected_category)
 
-    prompt_version = "v1"
+    prompt_version = "v2"
     
     accuracy, results = evaluate(examples, prompt_version)
     print(f"Accuracy: {accuracy:.2%}")

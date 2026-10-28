@@ -1,0 +1,247 @@
+{
+  "prompt_version": "v2",
+  "accuracy": 0.95,
+  "total_examples": 40,
+  "results": [
+    {
+      "id": "001",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "002",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "003",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "004",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "005",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "006",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "007",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "008",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "009",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "010",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "011",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "012",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "013",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "014",
+      "expected_category": "billing",
+      "predicted_category": "billing",
+      "correct": true
+    },
+    {
+      "id": "015",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "016",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "017",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "018",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "019",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "020",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "021",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "022",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "023",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "024",
+      "expected_category": "technical",
+      "predicted_category": "technical",
+      "correct": true
+    },
+    {
+      "id": "025",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "026",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "027",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "028",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "029",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "030",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "031",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "032",
+      "expected_category": "account",
+      "predicted_category": "account",
+      "correct": true
+    },
+    {
+      "id": "033",
+      "expected_category": "account",
+      "predicted_category": "general",
+      "correct": false
+    },
+    {
+      "id": "034",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "035",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "036",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "037",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "038",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "039",
+      "expected_category": "general",
+      "predicted_category": "general",
+      "correct": true
+    },
+    {
+      "id": "040",
+      "expected_category": "general",
+      "predicted_category": "billing",
+      "correct": false
+    }
+  ]
+}
